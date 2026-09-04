@@ -1,0 +1,1731 @@
+<![CDATA[<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Greetings and Introductions (A1)</title>
+    <style>
+        :root {
+            --blue: #1e6cff;
+            /* saludos */
+            --green: #1aa86a;
+            /* presentaciones */
+            --orange: #f59e0b;
+            /* preguntas */
+            --red: #ef4444;
+            /* despedidas */
+
+            --bg: #0b1220;
+            --text: #eaf2ff;
+            --muted: rgba(234, 242, 255, .82);
+
+            --cardBorder: rgba(255, 255, 255, .12);
+            --shadow: 0 12px 30px rgba(0, 0, 0, .35);
+
+            --focus: #ffffff;
+            --focusBg: rgba(30, 108, 255, .35);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(900px 520px at 15% 0%, rgba(30, 108, 255, .25), transparent 60%),
+                radial-gradient(900px 520px at 85% 0%, rgba(26, 168, 106, .20), transparent 60%),
+                radial-gradient(720px 460px at 50% 100%, rgba(245, 158, 11, .14), transparent 55%),
+                var(--bg);
+            padding: clamp(14px, 2.2vw, 28px);
+            line-height: 1.5;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ===== Capa 1: título ===== */
+        header {
+            text-align: center;
+            padding: clamp(18px, 2.5vw, 26px) 14px;
+            margin-bottom: 18px;
+        }
+
+        .kicker {
+            font-size: 14px;
+            /* >=14px */
+            color: var(--muted);
+            letter-spacing: .2px;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(18px, 3.6vw, 2.35rem);
+            /* >=18px */
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            margin: 10px auto 0;
+            max-width: 70ch;
+            font-size: 14px;
+            /* >=14px */
+            color: var(--muted);
+        }
+
+        /* ===== Capa 2/3: grid + tarjetas ===== */
+        .infografia {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: 1fr;
+            /* mobile first */
+            align-items: start;
+        }
+
+        .layer-label {
+            grid-column: 1/-1;
+            font-size: 14px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .layer-label::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, rgba(30, 108, 255, .95), rgba(26, 168, 106, .95));
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, .06);
+            flex: 0 0 auto;
+        }
+
+        .grid-cards {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            align-items: stretch;
+        }
+
+        @media (min-width:640px) {
+            .grid-cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (min-width:980px) {
+            .grid-cards {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+
+            /* En módulos con 3 tarjetas, evitar “hueco” del 4º slot */
+            .module-section > .grid-cards {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        /* A partir de 640px el módulo también debe usar 3 columnas para evitar huecos
+           (porque el layout global ya pasa a 2 columnas y con 3 tarjetas puede quedar 1 celda vacía en ciertas widths). */
+        @media (min-width:640px) {
+            .module-section > .grid-cards {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .03));
+            border: 1px solid var(--cardBorder);
+            border-radius: 18px;
+            padding: 16px 16px 14px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            min-height: 240px;
+        }
+
+        /* borde lateral por categoría */
+        .card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 7px;
+            background: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, .05);
+        }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            inset: -90px -90px auto auto;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            opacity: .18;
+            background: var(--accent);
+            pointer-events: none;
+        }
+
+        .card .top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, .06);
+            flex: 0 0 auto;
+        }
+
+        .icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .10);
+            flex: 0 0 auto;
+        }
+
+        /* modelo */
+        .model {
+            margin: 10px 0 10px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(0, 0, 0, .18);
+        }
+
+        .model .label {
+            font-size: 14px;
+            /* >=14px */
+            color: rgba(234, 242, 255, .78);
+            letter-spacing: .02em;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .model .sentence {
+            margin: 0;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .translation {
+            color: rgba(234, 242, 255, .88);
+            font-size: 14px;
+            /* >=14px */
+            margin: 6px 0 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid rgba(255, 255, 255, .16);
+            background: rgba(255, 255, 255, .06);
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 900;
+            letter-spacing: .01em;
+            font-size: 14px;
+            /* >=14px */
+            min-height: 44px;
+            /* target táctil */
+            line-height: 1.1;
+            min-width: 120px;
+            touch-action: manipulation;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* enfoque visible (WCAG teclado) */
+        .btn:focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 3px;
+            box-shadow: 0 0 0 6px var(--focusBg);
+        }
+
+        .btn.accent {
+            border-color: rgba(255, 255, 255, .22);
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .03);
+        }
+
+        .card h2 {
+            margin: 0 0 8px;
+            font-size: 18px;
+            /* >=18px */
+            letter-spacing: .2px;
+            line-height: 1.2;
+        }
+
+        .card p {
+            margin: 0 0 10px;
+            color: var(--muted);
+            font-size: 14px;
+            /* >=14px */
+            line-height: 1.5;
+        }
+
+        .examples {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .ex {
+            background: rgba(0, 0, 0, .18);
+            border: 1px dashed rgba(255, 255, 255, .16);
+            border-radius: 12px;
+            padding: 10px 10px;
+            margin-left: 7px;
+            /* espacio visual por borde lateral */
+        }
+
+        .ex strong {
+            display: block;
+            font-size: 14px;
+            color: rgba(234, 242, 255, .78);
+            margin-bottom: 3px;
+            font-weight: 900;
+            letter-spacing: .02em;
+        }
+
+        .phrase {
+            font-size: 14px;
+            margin: 0;
+            color: rgba(234, 242, 255, .94);
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        /* color por categoría */
+        .c-blue {
+            --accent: var(--blue);
+        }
+
+        .c-green {
+            --accent: var(--green);
+        }
+
+        .c-orange {
+            --accent: var(--orange);
+        }
+
+        .c-red {
+            --accent: var(--red);
+        }
+
+        /* Colores requeridos (A1 - Verb TO BE) */
+        .c-blue2 {
+            --accent: #3b82f6;
+        }
+
+        .c-red2 {
+            --accent: #ef4444;
+        }
+
+        .c-green2 {
+            --accent: #10b981;
+        }
+
+        footer {
+            margin-top: 16px;
+            padding: 14px 10px 0;
+            text-align: center;
+            color: rgba(234, 242, 255, .76);
+            font-size: 14px;
+        }
+
+        .hint {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .04);
+        }
+
+        /* ===== Ajustes para centrar tarjetas específicas (sin huecos) ===== */
+        .card[aria-label="Introducing Yourself"],
+        .card[aria-label="Basic Questions"] {
+            justify-self: center;
+            width: min(520px, 100%);
+            margin: 0 auto;
+        }
+
+        /* ===== Verb TO BE (compacto): ejemplos sin huecos ===== */
+        .to-be-table {
+            display: grid;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .to-be-row {
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(0, 0, 0, .18);
+            padding: 12px 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .to-be-row::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 6px;
+            background: var(--accent);
+            opacity: .95;
+        }
+
+        .to-be-title {
+            font-weight: 1000;
+            font-size: 14px;
+            letter-spacing: .02em;
+            margin-bottom: 6px;
+        }
+
+        .to-be-rule {
+            font-weight: 900;
+            font-size: 16px;
+            margin-bottom: 10px;
+            line-height: 1.25;
+        }
+
+        /* Aquí está el cambio pedido: horizontal para eliminar espacios vacíos */
+        .to-be-ex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .to-be-item {
+            flex: 1 1 220px;
+            /* mínimo para que en escritorio se vea horizontal y sin huecos */
+            background: rgba(0, 0, 0, .18);
+            border: 1px dashed rgba(255, 255, 255, .16);
+            border-radius: 12px;
+            padding: 10px 10px;
+            margin: 0;
+            color: rgba(234, 242, 255, .96);
+            font-weight: 750;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        @media (max-width: 560px) {
+            .to-be-item {
+                flex: 1 1 100%;
+            }
+        }
+
+        .to-be-item + .to-be-item {
+            margin-top: 0;
+        }
+
+        /* ===== Modal (subventana) - Ejercicios prácticos ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 9999;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            width: min(980px, 100%);
+            max-height: min(82vh, 820px);
+            overflow: auto;
+            border-radius: 18px;
+            background: rgba(11, 18, 32, .98);
+            border: 1px solid rgba(255, 255, 255, .14);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .55);
+            padding: 14px;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 6px 2px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, .10);
+            margin-bottom: 12px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 1000;
+            letter-spacing: .2px;
+            margin: 0;
+        }
+
+        .modal-close {
+            min-width: 44px;
+        }
+
+        .modal-body {
+            padding: 2px 2px 10px;
+        }
+
+        .exercises-trigger-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .exercises-trigger {
+            min-width: 220px;
+        }
+
+        /* Inputs/textarea para ejercicios (modal) */
+        .exercise-input {
+            width: 100%;
+            margin-top: 8px;
+            background: rgba(0, 0, 0, .18);
+            border: 1px dashed rgba(255, 255, 255, .22);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 14px;
+            min-height: 44px;
+            line-height: 1.4;
+            resize: vertical;
+            outline: none;
+        }
+
+        .exercise-input:focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 3px;
+            box-shadow: 0 0 0 6px var(--focusBg);
+        }
+
+        /* ===== Evaluación (palomita/x) + score global ===== */
+        .eval-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .eval-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 1000;
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .18);
+            background: rgba(255, 255, 255, .06);
+        }
+
+        .eval-badge .mark {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+            font-weight: 1000;
+            line-height: 1;
+        }
+
+        .eval-badge.correct {
+            border-color: rgba(16, 185, 129, .35);
+        }
+
+        .eval-badge.correct .mark {
+            background: rgba(16, 185, 129, .18);
+            color: #34d399;
+        }
+
+        .eval-badge.incorrect {
+            border-color: rgba(239, 68, 68, .35);
+        }
+
+        .eval-badge.incorrect .mark {
+            background: rgba(239, 68, 68, .18);
+            color: #fb7185;
+        }
+
+        .score-panel {
+            margin-top: 14px;
+            padding: 12px 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,.12);
+            background: rgba(0,0,0,.18);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .score-stats {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .score-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            font-weight: 1000;
+        }
+
+        .score-chip .label {
+            font-size: 13px;
+            color: rgba(234, 242, 255, .78);
+            font-weight: 900;
+            letter-spacing: .02em;
+        }
+
+        .score-chip .value {
+            font-size: 16px;
+        }
+
+        .eval-answer {
+            color: rgba(234, 242, 255, .88);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <!-- Capa 1: Título -->
+        <header>
+            <div class="kicker">English for A1 · Infografía educativa</div>
+            <h1>Module A1</h1>
+            <p class="subtitle">
+                Aprende expresiones básicas para <strong>saludar</strong>,
+                <strong>presentarte</strong>, <strong>preguntar el nombre</strong> y
+                <strong>despedirte</strong>.
+            </p>
+        </header>
+
+        <!-- Capa 2 y 3: Grid + tarjetas -->
+        <main class="infografia">
+            <div class="layer-label">Greetings and Farewells</div>
+
+            <section class="grid-cards" aria-label="Greetings and Farewells">
+                <!-- 1) Saludos básicos (Azul) -->
+                <article class="card c-blue" role="group" aria-label="Saludos básicos">
+                    <div class="top">
+                        <div class="badge"><span class="dot"></span> Hello / Saludos</div>
+                        <div class="icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 2C14.21 2 16 3.79 16 6C16 8.21 14.21 10 12 10C9.79 10 8 8.21 8 6C8 3.79 9.79 2 12 2Z"
+                                    stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                <path d="M4 22C4 17.58 7.58 14 12 14C16.42 14 20 17.58 20 22" stroke="var(--accent)"
+                                    stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h2>Encabezado: Saludos básicos</h2>
+                    <p>Usa estas frases para iniciar una conversación.</p>
+
+                    <div class="model">
+                        <div class="label">Regla / frase modelo</div>
+                        <p class="sentence">Hello! / Hi!</p>
+                    </div>
+
+                    <div class="examples">
+                        <div class="ex">
+                            <strong>Ejemplo</strong>
+                            <p class="phrase">Hello! I’m Ana.</p>
+
+                            <div id="traduccion-hello" class="translation hidden">
+                                Traducción: ¡Hola! Soy Ana.
+                            </div>
+
+                            <div class="actions">
+                                <button class="btn accent" type="button"
+                                    onclick="toggleTranslation('traduccion-hello')">
+                                    Ver traducción
+                                </button>
+                                <button class="btn" type="button" onclick="playAudio('audio-hello')"
+                                    data-speech="audio-hello" data-text="Hello! I’m Ana.">
+                                    Escuchar pronunciación
+                                </button>
+                            </div>
+
+                            <audio id="audio-hello" preload="none">
+                                <source src="audio/hello.mp3" type="audio/mpeg">
+                            </audio>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 2) Presentaciones personales (Verde) -->
+                <article class="card c-green" role="group" aria-label="Presentaciones personales">
+                    <div class="top">
+                        <div class="badge"><span class="dot"></span> Introductions</div>
+                        <div class="icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12Z"
+                                    stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                <path d="M4 22C4 18.13 7.58 15 12 15C16.42 15 20 18.13 20 22" stroke="var(--accent)"
+                                    stroke-width="2" stroke-linecap="round" />
+                                <path d="M20 5L22 3" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h2>Encabezado: Presentaciones personales</h2>
+                    <p>Para presentarte, usa una estructura simple.</p>
+
+                    <div class="model">
+                        <div class="label">Regla / frase modelo</div>
+                        <p class="sentence">My name is … / I’m …</p>
+                    </div>
+
+                    <div class="examples">
+                        <div class="ex">
+                            <strong>Ejemplo</strong>
+                            <p class="phrase">My name is Carlos.</p>
+
+                            <div id="traduccion-intro" class="translation hidden">
+                                Traducción: Mi nombre es Carlos.
+                            </div>
+
+                            <div class="actions">
+                                <button class="btn accent" type="button"
+                                    onclick="toggleTranslation('traduccion-intro')">
+                                    Ver traducción
+                                </button>
+                                <button class="btn" type="button" onclick="playAudio('audio-intro')"
+                                    data-speech="audio-intro" data-text="My name is Carlos.">
+                                    Escuchar pronunciación
+                                </button>
+                            </div>
+
+                            <audio id="audio-intro" preload="none">
+                                <source src="audio/my-name-is.mp3" type="audio/mpeg">
+                            </audio>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 3) Preguntar nombre (Naranja) -->
+                <article class="card c-orange" role="group" aria-label="Preguntar nombre">
+                    <div class="top">
+                        <div class="badge"><span class="dot"></span> What’s your name?</div>
+                        <div class="icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 17H12.01" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" />
+                                <path
+                                    d="M9.09 9C9.5 7.34 10.99 6 12.76 6C14.86 6 16.5 7.64 16.5 9.74C16.5 12.1 14.3 12.4 13.5 13.5C13.2 13.9 13.09 14.4 13.09 15V15.5"
+                                    stroke="var(--accent)" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path
+                                    d="M12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22Z"
+                                    stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h2>Encabezado: Preguntar nombre</h2>
+                    <p>Puedes preguntar el nombre de forma rápida.</p>
+
+                    <div class="model">
+                        <div class="label">Regla / frase modelo</div>
+                        <p class="sentence">What’s your name?</p>
+                    </div>
+
+                    <div class="examples">
+                        <div class="ex">
+                            <strong>Ejemplo</strong>
+                            <p class="phrase">What’s your name? — I’m Sofia.</p>
+
+                            <div id="traduccion-name" class="translation hidden">
+                                Traducción: ¿Cómo te llamas? — Soy Sofia.
+                            </div>
+
+                            <div class="actions">
+                                <button class="btn accent" type="button"
+                                    onclick="toggleTranslation('traduccion-name')">
+                                    Ver traducción
+                                </button>
+                                <button class="btn" type="button" onclick="playAudio('audio-name')"
+                                    data-speech="audio-name" data-text="What’s your name? I’m Sofia.">
+                                    Escuchar pronunciación
+                                </button>
+                            </div>
+
+                            <audio id="audio-name" preload="none">
+                                <source src="audio/what-is-your-name.mp3" type="audio/mpeg">
+                            </audio>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 4) Despedidas (Rojo) -->
+                <article class="card c-red" role="group" aria-label="Despedidas">
+                    <div class="top">
+                        <div class="badge"><span class="dot"></span> Bye / Goodbyes</div>
+                        <div class="icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 12H14" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                <path d="M10 8L14 12L10 16" stroke="var(--accent)" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M17 6C18.66 6.5 20 8.22 20 10.5C20 13 18.4 14.8 17 15.2" stroke="var(--accent)"
+                                    stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h2>Encabezado: Despedidas</h2>
+                    <p>Termina la conversación con frases comunes.</p>
+
+                    <div class="model">
+                        <div class="label">Regla / frase modelo</div>
+                        <p class="sentence">Bye! / Goodbye! / See you!</p>
+                    </div>
+
+                    <div class="examples">
+                        <div class="ex">
+                            <strong>Ejemplo</strong>
+                            <p class="phrase">Goodbye! See you tomorrow!</p>
+
+                            <div id="traduccion-bye" class="translation hidden">
+                                Traducción: ¡Adiós! ¡Hasta mañana!
+                            </div>
+
+                            <div class="actions">
+                                <button class="btn accent" type="button"
+                                    onclick="toggleTranslation('traduccion-bye')">
+                                    Ver traducción
+                                </button>
+                                <button class="btn" type="button" onclick="playAudio('audio-bye')"
+                                    data-speech="audio-bye" data-text="Goodbye! See you tomorrow!">
+                                    Escuchar pronunciación
+                                </button>
+                            </div>
+
+                            <audio id="audio-bye" preload="none">
+                                <source src="audio/goodbye.mp3" type="audio/mpeg">
+                            </audio>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 5) Introducing Yourself - Verde #10b981 -->
+                <article class="card c-green2" role="group" aria-label="Introducing Yourself">
+                    <div class="top">
+                        <div class="badge"><span class="dot"></span> Introducing Yourself</div>
+                        <div class="icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12Z"
+                                    stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                <path d="M4 22C4 18.13 7.58 15 12 15C16.42 15 20 18.13 20 22" stroke="var(--accent)"
+                                    stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h2>Introducing Yourself</h2>
+                    <p>Practica una presentación corta y clara.</p>
+
+                    <div class="model">
+                        <div class="label">Frase modelo</div>
+                        <p class="sentence">My name is... / I am...</p>
+                    </div>
+
+                    <div class="examples">
+                        <div class="ex">
+                            <strong>Ejemplo</strong>
+                            <p class="phrase">My name is Diego.</p>
+
+                            <div id="traduccion-introducing" class="translation hidden">
+                                Traducción: Mi nombre es Diego.
+                            </div>
+
+                            <div class="actions">
+                                <button class="btn accent" type="button"
+                                    onclick="toggleTranslation('traduccion-introducing')">
+                                    Ver traducción
+                                </button>
+                                <button class="btn" type="button" onclick="playAudio('audio-introducing')"
+                                    data-speech="audio-introducing" data-text="My name is Diego.">
+                                    Escuchar pronunciación
+                                </button>
+                            </div>
+
+                            <audio id="audio-introducing" preload="none">
+                                <source src="audio/my-name-is-diego.mp3" type="audio/mpeg">
+                            </audio>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 6) Basic Questions - Naranja #f59e0b -->
+                <article class="card c-orange2" role="group" aria-label="Basic Questions">
+                    <div class="top">
+                        <div class="badge"><span class="dot"></span> Basic Questions</div>
+                        <div class="icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 17H12.01" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" />
+                                <path
+                                    d="M9.09 9C9.5 7.34 10.99 6 12.76 6C14.86 6 16.5 7.64 16.5 9.74C16.5 12.1 14.3 12.4 13.5 13.5C13.2 13.9 13.09 14.4 13.09 15V15.5"
+                                    stroke="var(--accent)" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path
+                                    d="M12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22Z"
+                                    stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h2>Basic Questions</h2>
+                    <p>Respuestas rápidas para tu primer diálogo.</p>
+
+                    <div class="model">
+                        <div class="label">Frase modelo</div>
+                        <p class="sentence">What is your name? / How are you?</p>
+                    </div>
+
+                    <div class="examples">
+                        <div class="ex">
+                            <strong>Ejemplo</strong>
+                            <p class="phrase">What is your name?</p>
+
+                            <div id="traduccion-basic-name" class="translation hidden">
+                                Traducción: ¿Cuál es tu nombre?
+                            </div>
+
+                            <div class="actions">
+                                <button class="btn accent" type="button"
+                                    onclick="toggleTranslation('traduccion-basic-name')">
+                                    Ver traducción
+                                </button>
+                                <button class="btn" type="button" onclick="playAudio('audio-basic-name')"
+                                    data-speech="audio-basic-name" data-text="What is your name?">
+                                    Escuchar pronunciación
+                                </button>
+                            </div>
+
+                            <audio id="audio-basic-name" preload="none">
+                                <source src="audio/what-is-your-name.mp3" type="audio/mpeg">
+                            </audio>
+                        </div>
+                    </div>
+                </article>
+
+            <!-- Fin de Greetings and Farewells -->
+            </section>
+
+            <!-- Verb TO BE (A1) - nueva sección compacta -->
+            <section aria-label="Verb TO BE (A1)">
+                <div class="layer-label" style="margin-top: 18px;">Verb TO BE (A1)</div>
+
+                <div class="card" role="group" aria-label="Tabla compacta Verb TO BE" style="--accent:#3b82f6; padding: 14px;">
+                    <div class="to-be-table">
+                        <div class="to-be-row c-blue2">
+                            <div class="to-be-title">Affirmative</div>
+                            <div class="to-be-rule">Subject + to be + complement</div>
+                            <div class="to-be-ex">
+                                <div class="to-be-item">She is a doctor.</div>
+                                <div class="to-be-item">They are at home.</div>
+                                <div id="traduccion-to-be-affirmative" class="translation hidden">
+                                    Traducción: Ella es doctora. / Ellos están en casa.
+                                </div>
+                                <div class="actions" style="margin-top:10px;">
+                                    <button class="btn accent" type="button" onclick="toggleTranslation('traduccion-to-be-affirmative')">
+                                        Ver traducción
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="to-be-row c-red2">
+                            <div class="to-be-title">Negative</div>
+                            <div class="to-be-rule">Subject + to be + not + complement</div>
+                            <div class="to-be-ex">
+                                <div class="to-be-item">He is not married.</div>
+                                <div class="to-be-item">We are not tired.</div>
+                                <div id="traduccion-to-be-negative" class="translation hidden">
+                                    Traducción: Él no está casado. / Nosotros no estamos cansados.
+                                </div>
+                                <div class="actions" style="margin-top:10px;">
+                                    <button class="btn accent" type="button" onclick="toggleTranslation('traduccion-to-be-negative')">
+                                        Ver traducción
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="to-be-row c-green2">
+                            <div class="to-be-title">Interrogative</div>
+                            <div class="to-be-rule">To be + subject + complement?</div>
+                            <div class="to-be-ex">
+                                <div class="to-be-item">Are you from Colombia?</div>
+                                <div class="to-be-item">Yes, I am. / No, I'm not.</div>
+                                <div id="traduccion-to-be-interrogative" class="translation hidden">
+                                    Traducción: ¿Eres de Colombia? Sí, lo soy. / No, no lo soy.
+                                </div>
+                                <div class="actions" style="margin-top:10px;">
+                                    <button class="btn accent" type="button" onclick="toggleTranslation('traduccion-to-be-interrogative')">
+                                        Ver traducción
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- C. Origen y Nacionalidad (A1) - ahora debajo de TO BE -->
+            <div class="module-section">
+                <div class="layer-label" style="margin-top: 18px;">C. Origen y Nacionalidad</div>
+
+                <section class="grid-cards" aria-label="C. Origen y Nacionalidad - Estructura gramatical">
+                    <!-- 1) Estructura gramatical (Azul) -->
+                    <article class="card" role="group" aria-label="Estructura gramatical de origen y nacionalidad"
+                        style="--accent:#3b82f6;">
+                        <div class="top">
+                            <div class="badge"><span class="dot"></span> Estructura gramatical</div>
+                            <div class="icon" aria-hidden="true">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 19V5" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M8 19V9" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M12 19V13" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M16 19V7" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M20 19V11" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <h2>Estructura gramatical</h2>
+                        <p>Aprende cómo decir tu origen y tu nacionalidad.</p>
+
+                        <div class="model">
+                            <div class="label">Regla</div>
+                            <p class="sentence">Subject + To Be + from + Country</p>
+                            <p class="sentence" style="margin-top:10px;">Ejemplo: I am from Mexico.</p>
+                        </div>
+
+                        <div class="examples">
+                            <div class="ex">
+                                <strong>Traducción del ejemplo</strong>
+                                <p class="phrase">Yo soy de México.</p>
+
+                                <div id="traduccion-from-country" class="translation hidden">
+                                    Traducción: Yo soy de México.
+                                </div>
+
+                                <div class="actions">
+                                    <button class="btn accent" type="button"
+                                        onclick="toggleTranslation('traduccion-from-country')">
+                                        Ver traducción
+                                    </button>
+
+                                    <button class="btn" type="button"
+                                        onclick="playAudio('audio-from-country')"
+                                        data-speech="audio-from-country"
+                                        data-text="I am from Mexico.">
+                                        Escuchar pronunciación
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="model" style="margin-top:12px;">
+                            <div class="label">Regla</div>
+                            <p class="sentence">Subject + To Be + Nationality</p>
+                            <p class="sentence" style="margin-top:10px;">Ejemplo: I am Mexican.</p>
+                        </div>
+
+                        <div class="examples">
+                            <div class="ex">
+                                <strong>Traducción del ejemplo</strong>
+                                <p class="phrase">Yo soy mexicano.</p>
+
+                                <div id="traduccion-nationality" class="translation hidden">
+                                    Traducción: Yo soy mexicano.
+                                </div>
+
+                                <div class="actions">
+                                    <button class="btn accent" type="button"
+                                        onclick="toggleTranslation('traduccion-nationality')">
+                                        Ver traducción
+                                    </button>
+
+                                    <button class="btn" type="button"
+                                        onclick="playAudio('audio-nationality')"
+                                        data-speech="audio-nationality"
+                                        data-text="I am Mexican.">
+                                        Escuchar pronunciación
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 2) Pregunta básica (Verde) -->
+                    <article class="card" role="group" aria-label="Pregunta básica de origen"
+                        style="--accent:#10b981;">
+                        <div class="top">
+                            <div class="badge"><span class="dot"></span> Pregunta básica</div>
+                            <div class="icon" aria-hidden="true">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 17H12.01" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" />
+                                    <path
+                                        d="M9.09 9C9.5 7.34 10.99 6 12.76 6C14.86 6 16.5 7.64 16.5 9.74C16.5 12.1 14.3 12.4 13.5 13.5C13.2 13.9 13.09 14.4 13.09 15V15.5"
+                                        stroke="var(--accent)" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path
+                                        d="M12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22Z"
+                                        stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <h2>Pregunta básica</h2>
+                        <p>Usa esta pregunta para conocer el origen.</p>
+
+                        <div class="model">
+                            <div class="label">Frase modelo</div>
+                            <p class="sentence">Where are you from?</p>
+                        </div>
+
+                        <div class="examples">
+                            <div class="ex">
+                                <strong>Traducción</strong>
+                                <p class="phrase">¿De dónde eres?</p>
+
+                                <div id="traduccion-where-you-from" class="translation hidden">
+                                    Traducción: ¿De dónde eres?
+                                </div>
+
+                                <div class="actions">
+                                    <button class="btn accent" type="button"
+                                        onclick="toggleTranslation('traduccion-where-you-from')">
+                                        Ver traducción
+                                    </button>
+
+                                    <button class="btn" type="button"
+                                        onclick="playAudio('audio-where-you-from')"
+                                        data-speech="audio-where-you-from"
+                                        data-text="Where are you from?">
+                                        Escuchar pronunciación
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 3) Práctica guiada (diálogo) (Naranja) -->
+                    <article class="card" role="group" aria-label="Guided Practice Dialogue"
+                        style="--accent:#f59e0b;">
+                        <div class="top">
+                            <div class="badge"><span class="dot"></span> Guided Practice Dialogue</div>
+                            <div class="icon" aria-hidden="true">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 4H20V14H8L4 18V4Z" stroke="var(--accent)" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M8 8H16" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M8 12H13" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <h2>Guided Practice Dialogue</h2>
+                        <p>Lee el diálogo y practica respondiendo con tu información.</p>
+
+                        <div class="model">
+                            <div class="label">Diálogo</div>
+
+                            <div class="dialog">
+                                <div class="dialog-line">
+                                    <strong>Sarah:</strong> Good morning! My name is Sarah. What is your name?
+                                </div>
+                                <div class="dialog-line">
+                                    <strong>David:</strong> Hello, Sarah! I'm David. Nice to meet you.
+                                </div>
+                                <div class="dialog-line">
+                                    <strong>Sarah:</strong> Nice to meet you too, David. Where are you from?
+                                </div>
+                                <div class="dialog-line">
+                                    <strong>David:</strong> I'm from Canada, but I am in Spain right now. Are you a student?
+                                </div>
+                                <div class="dialog-line">
+                                    <strong>Sarah:</strong> No, I'm not. I am a teacher.
+                                </div>
+                            </div>
+
+                            <div class="examples">
+                                <div class="ex">
+                                    <strong>Traducción (opcional)</strong>
+                                    <p class="phrase">Muestra/oculta la traducción al español.</p>
+
+                                    <div id="traduccion-dialogo-guided" class="translation hidden">
+                                        <p style="margin:0;">
+                                            Sarah: Buenos días. Me llamo Sarah. ¿Cómo te llamas?<br/>
+                                            David: Hola, Sarah. Soy David. Mucho gusto.<br/>
+                                            Sarah: Mucho gusto también, David. ¿De dónde eres?<br/>
+                                            David: Soy de Canadá, pero ahora mismo estoy en España. ¿Eres estudiante?<br/>
+                                            Sarah: No, no lo soy. Soy maestra.
+                                        </p>
+                                    </div>
+
+                                    <div class="actions">
+                                        <button class="btn accent" type="button"
+                                            onclick="toggleTranslation('traduccion-dialogo-guided')">
+                                            Ver traducción
+                                        </button>
+
+                                        <button class="btn" type="button"
+                                            onclick="playAudio('audio-guided-dialogue')"
+                                            data-speech="audio-guided-dialogue"
+                                            data-text="Good morning! My name is Sarah. What is your name? Hello, Sarah! I'm David. Nice to meet you. Nice to meet you too, David. Where are you from? I'm from Canada, but I am in Spain right now. Are you a student? No, I'm not. I am a teacher.">
+                                            Escuchar pronunciación
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- Ejercicios prácticos: C. Origen y Nacionalidad (subventana modal) -->
+                <div class="module-section">
+                    <div class="layer-label" style="margin-top: 18px;">Ejercicios prácticos: C. Origen y Nacionalidad</div>
+
+                    <div class="exercises-trigger-wrap">
+                        <button class="btn exercises-trigger accent" type="button" onclick="openExercisesModal('modal-exercises-c')" aria-haspopup="dialog">
+                            Abrir ejercicios
+                        </button>
+                    </div>
+
+                    <!-- Contenido del modal (oculto) -->
+                    <div id="modal-exercises-c" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Ejercicios C. Origen y Nacionalidad">
+                        <div class="modal" role="document">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Ejercicios prácticos: C. Origen y Nacionalidad</h3>
+                                <button class="btn modal-close" type="button" onclick="closeExercisesModal('modal-exercises-c')">
+                                    Cerrar
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <section class="grid-cards" aria-label="Ejercicios C. Origen y Nacionalidad">
+                                    <article class="card" role="group" aria-label="Completa - origen y nacionalidad" style="--accent:#3b82f6;">
+                                        <div class="top">
+                                            <div class="badge"><span class="dot"></span> Completa</div>
+                                            <div class="icon" aria-hidden="true">
+                                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M4 20V4" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+                                                    <path d="M8 20V10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+                                                    <path d="M12 20V7" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+                                                    <path d="M16 20V13" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+                                                    <path d="M20 20V9" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        <h2>Completa</h2>
+                                        <p>Completa la frase escribiendo tu respuesta.</p>
+
+                                        <div class="examples">
+                                            <div class="exercise">
+                                                <strong>1)</strong>
+                                                <p class="phrase" style="display:flex; flex-wrap:wrap; align-items:center; gap:6px;">
+                                                    <span>I am from</span>
+                                                    <input type="text" id="input-ex-completa-origin-c1" class="exercise-inline-input" inputmode="text" aria-label="País"
+                                                        placeholder=""
+                                                        style="width: 150px; max-width: 62vw; padding: 7px 10px; border-radius: 10px; font-size: 14px; border: 1px dashed rgba(255,255,255,.22); background: rgba(0,0,0,.18); color: var(--text); outline: none;" />
+                                                    <span>.</span>
+                                                </p>
+
+                                                <div class="actions" style="margin-top:10px;">
+                                                    <button class="btn accent" type="button"
+                                                        onclick="toggleAnswer('respuesta1')">
+                                                        Ver respuesta
+                                                    </button>
+                                                </div>
+
+                                                <div id="respuesta1" class="translation" style="display:none; margin-top:10px;">
+                                                    Correct answer: I am from <strong>Mexico</strong>.
+                                                </div>
+
+                                                <div id="eval-ej-completa-origin-1" class="hidden" style="margin-top:8px;"></div>
+                                            </div>
+
+                                            <div class="exercise">
+                                                <strong>2)</strong>
+                                                <p class="phrase" style="display:flex; flex-wrap:wrap; align-items:center; gap:6px;">
+                                                    <span>I am</span>
+                                                    <input type="text" id="input-ex-completa-origin-c2" class="exercise-inline-input" inputmode="text" aria-label="Nacionalidad"
+                                                        placeholder=""
+                                                        style="width: 150px; max-width: 62vw; padding: 7px 10px; border-radius: 10px; font-size: 14px; border: 1px dashed rgba(255,255,255,.22); background: rgba(0,0,0,.18); color: var(--text); outline: none;" />
+                                                    <span>.</span>
+                                                </p>
+
+                                                <div class="actions" style="margin-top:10px;">
+                                                    <button class="btn accent" type="button"
+                                                        onclick="toggleAnswer('respuesta2')">
+                                                        Ver respuesta
+                                                    </button>
+                                                </div>
+
+                                                <div id="respuesta2" class="translation" style="display:none; margin-top:10px;">
+                                                    Correct answer: I am <strong>Mexican</strong>.
+                                                </div>
+
+                                                <div id="eval-ej-completa-origin-2" class="hidden" style="margin-top:8px;"></div>
+                                            </div>
+
+                                            <div class="exercise">
+                                                <strong>3)</strong>
+                                                <p class="phrase" style="display:flex; flex-wrap:wrap; align-items:center; gap:6px;">
+                                                    <span>I am from</span>
+                                                    <input type="text" id="input-ex-completa-origin-c3" class="exercise-inline-input" inputmode="text" aria-label="País 2"
+                                                        placeholder=""
+                                                        style="width: 140px; max-width: 55vw; padding: 7px 10px; border-radius: 10px; font-size: 14px; border: 1px dashed rgba(255,255,255,.22); background: rgba(0,0,0,.18); color: var(--text); outline: none;" />
+                                                    <span>, but I am not</span>
+                                                    <input type="text" id="input-ex-completa-origin-c4" class="exercise-inline-input" inputmode="text" aria-label="Nacionalidad 2"
+                                                        placeholder=""
+                                                        style="width: 140px; max-width: 55vw; padding: 7px 10px; border-radius: 10px; font-size: 14px; border: 1px dashed rgba(255,255,255,.22); background: rgba(0,0,0,.18); color: var(--text); outline: none;" />
+                                                    <span>.</span>
+                                                </p>
+
+                                                <div class="actions" style="margin-top:10px;">
+                                                    <button class="btn accent" type="button"
+                                                        onclick="toggleAnswer('respuesta3')">
+                                                        Ver respuesta
+                                                    </button>
+                                                </div>
+
+                                                <div id="respuesta3" class="translation" style="display:none; margin-top:10px;">
+                                                    Correct answer: I am from <strong>Canada</strong>, but I am not <strong>Mexican</strong>.
+                                                </div>
+
+                                                <div id="eval-ej-completa-origin-3" class="hidden" style="margin-top:8px;"></div>
+                                            </div>
+                                        </div>
+
+                                        <div id="traduccion-ej-completa-origin-country" class="translation hidden" style="margin-top:10px;">
+                                            Respuesta (modelo): I am from Mexico. I am Mexican. I am from Canada, but I am not Mexican.
+                                        </div>
+
+
+                                        <div class="actions" style="margin-top:8px;">
+                                            <button class="btn" type="button"
+                                                onclick="playAudio('audio-ex-fill-origin-country')"
+                                                data-speech="audio-ex-fill-origin-country"
+                                                data-text="I am from Mexico. I am Mexican. I am from Canada, but I am not Mexican.">
+                                                Escuchar pronunciación
+                                            </button>
+                                        </div>
+                                    </article>
+
+                                    <article class="card" role="group" aria-label="Traduce - pregunta básica" style="--accent:#10b981;">
+                                        <div class="top">
+                                            <div class="badge"><span class="dot"></span> Traduce</div>
+                                            <div class="icon" aria-hidden="true">
+                                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7 7h10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+                                                    <path d="M9 7c0 6 6 10 6 10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+                                                    <path d="M5 20h14" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        <h2>Traduce</h2>
+                                        <p>Traduce al español.</p>
+
+                                        <div class="examples">
+                                            <div class="ex">
+                                                <strong>Frase</strong>
+                                                <p class="phrase">Where are you from?</p>
+
+                                                <label class="phrase" style="opacity:.88; display:block; margin-top:6px;" for="input-ex-where-from">
+                                                    Respuesta (en español):
+                                                </label>
+                                                <textarea id="input-ex-where-from" class="exercise-input" rows="2"
+                                                    placeholder=""></textarea>
+
+                                                <div class="translation hidden" id="traduccion-ej-where-from">
+                                                    Traducción: ¿De dónde eres?
+                                                </div>
+
+                                                <div class="actions" style="margin-top:14px;">
+                                                    <button class="btn accent" type="button"
+                                                        onclick="toggleTranslation('traduccion-ej-where-from')">
+                                                        Ver respuesta
+                                                    </button>
+                                                </div>
+
+                                                <div id="eval-ej-where-from" class="hidden" style="margin-top:10px;"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="actions">
+                                            <button class="btn" type="button" onclick="playAudio('audio-ex-where-are-you-from')" data-speech="audio-ex-where-are-you-from" data-text="Where are you from?">
+                                                Escuchar pronunciación
+                                            </button>
+                                        </div>
+                                    </article>
+
+                                    <article class="card" role="group" aria-label="Diálogo rápido" style="--accent:#f59e0b;">
+                                        <div class="top">
+                                            <div class="badge"><span class="dot"></span> Diálogo rápido</div>
+                                            <div class="icon" aria-hidden="true">
+                                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M4 5H20V15H7L4 18V5Z" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        <h2>Diálogo rápido</h2>
+                                        <p>Completa con tu información.</p>
+
+                                        <div class="examples">
+                                            <div class="ex">
+                                                <strong>Sarah:</strong>
+                                                <p class="phrase">Good morning! What is your name?</p>
+
+                                                <strong style="margin-top:8px; display:block;">Tu respuesta:</strong>
+
+                                                <label class="phrase" style="opacity:.88; display:block; margin-top:6px;" for="input-ex-dialog-name">
+                                                    Escribe en inglés:
+                                                </label>
+                                                <textarea id="input-ex-dialog-name" class="exercise-input" rows="2"
+                                                    placeholder=""></textarea>
+                                            </div>
+
+                                            <div class="ex">
+                                                <strong>Sarah:</strong>
+                                                <p class="phrase">Where are you from?</p>
+
+                                                <strong style="margin-top:8px; display:block;">Tu respuesta:</strong>
+
+                                                <label class="phrase" style="opacity:.88; display:block; margin-top:6px;" for="input-ex-dialog-from">
+                                                    Escribe en inglés:
+                                                </label>
+                                                <textarea id="input-ex-dialog-from" class="exercise-input" rows="2"
+                                                    placeholder=""></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div id="traduccion-ej-dialog-rapido" class="translation hidden" style="margin-top:10px;">
+                                            Respuesta (modelo):
+                                            <br/>My name is Diego.
+                                            <br/>I am from Mexico.
+                                        </div>
+
+                                        <div class="actions" style="margin-top:14px;">
+                                            <button class="btn accent" type="button"
+                                                onclick="toggleTranslation('traduccion-ej-dialog-rapido')">
+                                                Ver respuesta
+                                            </button>
+                                        </div>
+
+                                        <div id="eval-ej-dialog-rapido" class="hidden" style="margin-top:10px;"></div>
+
+                                        <div class="actions" style="margin-top:10px;">
+                                            <button class="btn" type="button"
+                                                onclick="playAudio('audio-ex-dialog-short')"
+                                                data-speech="audio-ex-dialog-short"
+                                                data-text="Good morning! What is your name? My name is... Where are you from? I am from...">
+                                                Escuchar pronunciación
+                                            </button>
+                                        </div>
+                                    </article>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        </article>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Ejercicios prácticos -->
+        </main>
+        </main>
+
+        <footer>
+            <span class="hint">Colores: Azul (Saludos) · Verde (Presentaciones) · Naranja (Preguntas) · Rojo
+                (Despedidas)</span>
+        </footer>
+    </div>
+
+    <script>
+        function toggleTranslation(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.classList.toggle('hidden');
+        }
+
+        function playAudio(audioId) {
+            // Intento 1: reproducir MP3 si existe y está cargado
+            const a = document.getElementById(audioId);
+            if (a && a.readyState > 0) {
+                try {
+                    a.currentTime = 0;
+                    a.play();
+                    return;
+                } catch (e) {
+                    // fallback abajo
+                }
+            }
+
+            // Fallback garantizado: Web Speech API (voz en inglés) usando data-text del botón
+            const speechTextEl = document.querySelector('[data-speech="' + audioId + '"]');
+            const speechText = speechTextEl ? speechTextEl.getAttribute('data-text') : null;
+            if (!speechText) return;
+
+            try {
+                if ('speechSynthesis' in window) {
+                    speechSynthesis.cancel();
+                    const u = new SpeechSynthesisUtterance(speechText);
+                    u.lang = 'en-US';
+                    u.rate = 0.95;
+                    u.pitch = 1;
+                    speechSynthesis.speak(u);
+                }
+            } catch (e) {
+                console.warn('Error al pronunciar:', e);
+            }
+        }
+
+        // ===== Modal helpers (ejercicios) =====
+        function toggleAnswer(elementId) {
+            const target = document.getElementById(elementId);
+            target.style.display = (target.style.display === "none" || target.style.display === "") ? "block" : "none";
+        }
+
+        function openExercisesModal(modalId) {
+            const overlay = document.getElementById(modalId);
+            if (!overlay) return;
+            overlay.classList.add('open');
+
+            // Cerrar al hacer click fuera del panel
+            overlay.addEventListener('click', onOverlayClick, { once: true });
+            function onOverlayClick(e) {
+                if (e.target === overlay) {
+                    closeExercisesModal(modalId);
+                }
+            }
+        }
+
+        function closeExercisesModal(modalId) {
+            const overlay = document.getElementById(modalId);
+            if (!overlay) return;
+            overlay.classList.remove('open');
+        }
+
+        // ===== Evaluación de ejercicios (✅ / ❌) + score global =====
+        function normalizeText(s) {
+            return (s ?? '')
+                .toString()
+                .trim()
+                .toLowerCase()
+                // elimina espacios extra
+                .replace(/\s+/g, ' ')
+                // elimina puntuación común al final/interna ligera
+                .replace(/[.,!?¿¡]+/g, '')
+                ;
+        }
+
+        function setEvalBadge(evalContainerId, isCorrect) {
+            const container = document.getElementById(evalContainerId);
+            if (!container) return;
+
+            container.innerHTML = isCorrect
+                ? '<span class="eval-row"><span class="eval-badge correct"><span class="mark">✓</span> Correcta</span></span>'
+                : '<span class="eval-row"><span class="eval-badge incorrect"><span class="mark">✕</span> Incorrecta</span></span>';
+
+            container.classList.remove('hidden');
+        }
+
+        function incrementScore(isCorrect) {
+            const cEl = document.getElementById('score-correctas');
+            const iEl = document.getElementById('score-incorrectas');
+            if (!cEl || !iEl) return;
+
+            const currentC = parseInt(cEl.textContent || '0', 10) || 0;
+            const currentI = parseInt(iEl.textContent || '0', 10) || 0;
+
+            if (isCorrect) cEl.textContent = String(currentC + 1);
+            else iEl.textContent = String(currentI + 1);
+        }
+
+        // - modelId: id del elemento con la respuesta modelo
+        // - evalRowId: id del contenedor donde se pintará ✅/❌
+        // - input1..: ids de inputs/textarea (según el ejercicio)
+        // - answerElId: id del contenedor donde se mostrará la respuesta correcta
+        function checkExerciseAnswer(modelId, evalRowId, input1, input2, input3, answerElId) {
+            const modelEl = document.getElementById(modelId);
+            if (modelEl) modelEl.classList.remove('hidden');
+
+            // ===== Caso especial: tarjeta “Completa” (sub-ejercicios 1/2/3) =====
+            // Respuestas correctas (según tu modelo):
+            // 1) I am from Mexico.              -> Mexico
+            // 2) I am Mexican.                -> Mexican
+            // 3) I am from Canada, but I am not Mexican. -> Canada + Mexican (pero en tus inputs es “not …”)
+            const isCompleta1 = evalRowId === 'eval-ej-completa-origin-1';
+            const isCompleta2 = evalRowId === 'eval-ej-completa-origin-2';
+            const isCompleta3 = evalRowId === 'eval-ej-completa-origin-3';
+
+            // Respuestas correctas para mostrar debajo del botón
+            // (según el sub-ejercicio)
+            const correctAnswer1 = 'Mexico';
+            const correctAnswer2 = 'Mexican';
+            const correctAnswer3a = 'Canada';
+            const correctAnswer3b = 'Mexican';
+
+            function showCorrectAnswer(text) {
+                const answerEl = answerElId ? document.getElementById(answerElId) : null;
+                if (!answerEl) return;
+                answerEl.classList.remove('hidden');
+                answerEl.textContent = 'Respuesta correcta: ' + text;
+            }
+
+            if (isCompleta1) {
+                const el = document.getElementById(input1);
+                const user = normalizeText(el ? el.value : '');
+                const correct = normalizeText(correctAnswer1);
+                const isCorrect = user.length > 0 && user === correct;
+
+                setEvalBadge(evalRowId, isCorrect);
+                incrementScore(isCorrect);
+                showCorrectAnswer(correctAnswer1);
+                return;
+            }
+
+            if (isCompleta2) {
+                const el = document.getElementById(input1);
+                const user = normalizeText(el ? el.value : '');
+                const correct = normalizeText(correctAnswer2);
+                const isCorrect = user.length > 0 && user === correct;
+
+                setEvalBadge(evalRowId, isCorrect);
+                incrementScore(isCorrect);
+                showCorrectAnswer(correctAnswer2);
+                return;
+            }
+
+            if (isCompleta3) {
+                // input1 = país 2 (Canada), input2 = nacionalidad 2 (Mexican)
+                const el1 = document.getElementById(input1);
+                const el2 = document.getElementById(input2);
+                const user1 = normalizeText(el1 ? el1.value : '');
+                const user2 = normalizeText(el2 ? el2.value : '');
+
+                const correct1 = normalizeText(correctAnswer3a);
+                const correct2 = normalizeText(correctAnswer3b);
+
+                const isCorrect =
+                    user1.length > 0 &&
+                    user2.length > 0 &&
+                    user1 === correct1 &&
+                    user2 === correct2;
+
+                setEvalBadge(evalRowId, isCorrect);
+                incrementScore(isCorrect);
+
+                showCorrectAnswer(correctAnswer3a + ' / ' + correctAnswer3b);
+                return;
+            }
+
+            // ===== Fallback genérico (otros ejercicios) =====
+            if (!modelEl) return;
+
+            const modelText = normalizeText(modelEl.textContent);
+
+            let userParts = [];
+            const inputIds = [input1, input2, input3].filter(Boolean);
+            inputIds.forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) userParts.push(el.value);
+            });
+
+            const userText = normalizeText(userParts.join(' ').trim());
+            const isCorrect = userText.length > 0 && userText === modelText;
+
+            setEvalBadge(evalRowId, isCorrect);
+            incrementScore(isCorrect);
+        }
+
+        // Tecla ESC para cerrar cualquier modal abierto
+        document.addEventListener('keydown', function (e) {
+            if (e.key !== 'Escape') return;
+            const overlays = document.querySelectorAll('.modal-overlay.open');
+            overlays.forEach(function (o) {
+                o.classList.remove('open');
+            });
+        });
+    </script>
+</body>
+
+</html>]]>
